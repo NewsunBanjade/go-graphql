@@ -1,0 +1,19 @@
+services:
+  twitter:
+    build: .
+    command: make run
+    env_file:
+      - .env
+    ports:
+      - 9000:3000
+    volumes:
+      - .:/code
+
+  twitter_postgres:
+    image: postgres:alpine
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
