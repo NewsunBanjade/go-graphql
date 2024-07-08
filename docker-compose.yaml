@@ -1,19 +1,26 @@
+name: go-app
 services:
-  twitter:
-    build: .
-    command: make run
+  postgresgraph:
+    container_name: postgresgraph
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${EXPOSE_DB_PORT}:5432"
+    volumes:
+      - pgsdata:/var/lib/postgresql/data
+
+  gograph:
+    container_name: gograph
     env_file:
       - .env
     ports:
-      - 9000:3000
-    volumes:
-      - .:/code
+      - ${EXPOSE_API_PORT}:3000
+    build: .
+    depends_on:
+      - "postgresgraph"
 
-  twitter_postgres:
-    image: postgres:alpine
-    ports:
-      - ${DB_PORT}:5432
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
+volumes:
+  pgsdata: #

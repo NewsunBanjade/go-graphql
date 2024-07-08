@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 
@@ -27,9 +28,10 @@ func LoadEnv(fileName string) {
 
 func New() *Config {
 	godotenv.Load()
+	databaseURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), "5432", os.Getenv("DB_NAME"))
 	return &Config{
 		Database: database{
-			URL: os.Getenv("DATABASE_URL"),
+			URL: databaseURL,
 		},
 	}
 }
